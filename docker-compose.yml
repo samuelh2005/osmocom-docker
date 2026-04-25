@@ -1,0 +1,62 @@
+services:
+  hlr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: hlr
+    container_name: osmocom-hlr
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4258:4258"  # VTY
+      - "127.0.0.1:4259:4259"  # CTRL
+    volumes:
+      - hlr-data:/var/lib/osmocom
+      - ./osmo-hlr.cfg:/etc/osmocom/osmo-hlr.cfg:ro
+    networks:
+      osmocom:
+        ipv4_address: 172.28.0.10
+
+  msc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: msc
+    container_name: osmocom-msc
+    restart: unless-stopped
+    depends_on:
+      - hlr
+      - stp
+    ports:
+      - "127.0.0.1:4254:4254"  # VTY
+      - "127.0.0.1:4255:4255"  # CTRL
+    volumes:
+      - ./osmo-msc.cfg:/etc/osmocom/osmo-msc.cfg:ro
+    networks:
+      osmocom:
+        ipv4_address: 172.28.0.11
+
+  stp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: stp
+    container_name: osmocom-stp
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4239:4239"   # VTY
+    volumes:
+      - ./osmo-stp.cfg:/etc/osmocom/osmo-stp.cfg:ro
+    networks:
+      osmocom:
+        ipv4_address: 172.28.0.12
+
+networks:
+  osmocom:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+          gateway: 172.28.0.1
+
+volumes:
+  hlr-data: {}
