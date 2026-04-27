@@ -17,4 +17,5 @@ Management ports published on the host:
 - MSC CTRL: `127.0.0.1:4255`
 - HLR VTY: `127.0.0.1:4258`
 - HLR CTRL: `127.0.0.1:4259`
+- HLR GSUP: `127.0.0.1:4222`
 - STP VTY: `127.0.0.1:4239`

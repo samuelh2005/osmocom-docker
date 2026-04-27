@@ -9,6 +9,7 @@ services:
     ports:
       - "127.0.0.1:4258:4258"  # VTY
       - "127.0.0.1:4259:4259"  # CTRL
+      - "127.0.0.1:4222:4222"  # GSUP
     volumes:
       - hlr-data:/var/lib/osmocom
       - ./osmo-hlr.cfg:/etc/osmocom/osmo-hlr.cfg:ro
